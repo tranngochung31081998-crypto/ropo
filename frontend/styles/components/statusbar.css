@@ -1,0 +1,151 @@
+/* =============================================================================
+ * CULI Agent — Status Bar
+ * Footer bar: git branch · connection · provider · tokens · encoding
+ * BEM: .statusbar__*
+ * Theme: midnight (dark) only — no blue/purple, signal green accent
+ * ============================================================================= */
+
+/* ---- Container ---- */
+.statusbar {
+  display: flex;
+  align-items: center;
+  height: var(--statusbar-height, 28px);
+  padding: 0 var(--space-sm);
+  background: var(--color-paper-2);
+  border-top: var(--rule);
+  flex-shrink: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---- Left section (git branch, connection status) ---- */
+.statusbar__left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* ---- Right section (provider, token count, encoding) ---- */
+.statusbar__right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+/* ---- Base item (icon + text group) ---- */
+.statusbar__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  padding: 0 var(--space-2xs);
+  height: 100%;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  white-space: nowrap;
+  cursor: default;
+}
+
+/* ---- Interactive (clickable) item ---- */
+.statusbar__item--interactive {
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-xs);
+}
+
+.statusbar__item--interactive:hover {
+  color: var(--color-ink);
+  background: var(--color-surface);
+}
+
+/* ---- Accent modifier (e.g. provider name) ---- */
+.statusbar__item--accent {
+  color: var(--color-accent-dim);
+}
+
+.statusbar__item--accent:hover {
+  color: var(--color-accent);
+}
+
+/* ---- Icon wrapper ---- */
+.statusbar__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  font-size: 11px;
+  line-height: 1;
+}
+
+/* ---- Text label (with ellipsis overflow) ---- */
+.statusbar__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* ---- Vertical divider between groups ---- */
+.statusbar__divider {
+  width: 1px;
+  height: 60%;
+  background: var(--color-rule);
+  flex-shrink: 0;
+  margin: 0 var(--space-2xs);
+}
+
+/* ---- Connection status dot ---- */
+.statusbar__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.statusbar__dot--connected {
+  background: var(--color-accent);
+  box-shadow: 0 0 4px var(--color-accent-dim);
+}
+
+.statusbar__dot--disconnected {
+  background: var(--color-neutral);
+}
+
+.statusbar__dot--busy {
+  background: var(--color-warning);
+  animation: statusbar-pulse 1.5s ease-in-out infinite;
+}
+
+.statusbar__dot--error {
+  background: var(--color-error);
+}
+
+/* ---- Pulse animation for busy state ---- */
+@keyframes statusbar-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+/* ---- Responsive: tighter spacing on narrow viewports ---- */
+@media (max-width: 640px) {
+  .statusbar {
+    padding: 0 var(--space-xs);
+  }
+
+  .statusbar__item {
+    padding: 0 var(--space-2xs);
+  }
+
+  .statusbar__divider {
+    margin: 0 var(--space-2xs);
+  }
+}

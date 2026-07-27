@@ -1,0 +1,631 @@
+/* =============================================================================
+ * CULI Agent — Modal Overlays
+ * Hallmark · macrostructure: Workbench · genre: technical · theme: midnight/specimen
+ * Pre-emit critique: P5 H4 E5 S4 R5 V5
+ * =============================================================================
+ * Includes: modal-overlay, modal dialog, settings modal, knowledge panel,
+ *           modal header/body/footer, settings sidebar/tabs, knowledge cards.
+ * Dark theme, signal green accent, no purple/blue gradients.
+ * Uses var(--color-*) tokens from tokens.css exclusively.
+ * ============================================================================= */
+
+/* =============================================================================
+ * 1. MODAL OVERLAY
+ * ============================================================================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal, 400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg, 1.5rem);
+  background: oklch(0% 0 0 / 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-normal, 250ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    visibility var(--dur-normal, 250ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.modal-overlay.is-open,
+.modal-overlay[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =============================================================================
+ * 2. MODAL DIALOG (base)
+ * ============================================================================= */
+
+.modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 520px;
+  max-height: min(85vh, 680px);
+  background: var(--color-paper-2, oklch(17% 0.010 240));
+  border: var(--rule, 1px solid var(--color-rule));
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-lg, 0 8px 24px oklch(0% 0 0 / 0.5));
+  overflow: hidden;
+  transform: translateY(12px) scale(0.97);
+  transition:
+    transform var(--dur-normal, 250ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--dur-normal, 250ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.is-open .modal,
+[data-open="true"] .modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* =============================================================================
+ * 3. MODAL VARIATIONS
+ * ============================================================================= */
+
+/* --- Settings: wide modal --- */
+
+.modal--settings {
+  max-width: 720px;
+  max-height: min(90vh, 720px);
+}
+
+@media (max-width: 720px) {
+  .modal--settings {
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+}
+
+/* --- Knowledge: slide-in from right (full-height panel) --- */
+
+.modal--knowledge {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 440px;
+  max-height: none;
+  border-radius: 0;
+  border-top-left-radius: var(--radius-lg, 12px);
+  border-bottom-left-radius: var(--radius-lg, 12px);
+  transform: translateX(100%);
+  transition:
+    transform var(--dur-slow, 400ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--dur-normal, 250ms) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  box-shadow: -4px 0 24px oklch(0% 0 0 / 0.4);
+}
+
+.is-open .modal--knowledge,
+[data-open="true"] .modal--knowledge {
+  transform: translateX(0);
+}
+
+@media (max-width: 480px) {
+  .modal--knowledge {
+    max-width: 100vw;
+    border-radius: 0;
+  }
+}
+
+/* =============================================================================
+ * 4. MODAL HEADER
+ * ============================================================================= */
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md, 1rem);
+  padding: var(--space-lg, 1.5rem);
+  padding-bottom: var(--space-md, 1rem);
+  border-bottom: var(--rule, 1px solid var(--color-rule));
+  flex-shrink: 0;
+}
+
+.modal__header h2,
+.modal__header h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg, 1.5625rem);
+  font-weight: 600;
+  line-height: var(--leading-tight, 1.1);
+  color: var(--color-ink, oklch(94% 0.006 240));
+  letter-spacing: -0.01em;
+}
+
+.modal__header .modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm, 4px);
+  color: var(--color-muted, oklch(60% 0.008 240));
+  cursor: pointer;
+  font-size: var(--text-lg, 1.5625rem);
+  line-height: 1;
+  transition:
+    color var(--dur-fast, 150ms) ease,
+    background var(--dur-fast, 150ms) ease;
+}
+
+.modal__header .modal__close:hover {
+  color: var(--color-ink, oklch(94% 0.006 240));
+  background: var(--color-surface, oklch(22% 0.012 240));
+}
+
+.modal__header .modal__close:focus-visible {
+  outline: 2px solid var(--color-focus, oklch(70% 0.19 160));
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+ * 5. MODAL BODY
+ * ============================================================================= */
+
+.modal__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: var(--space-lg, 1.5rem);
+  color: var(--color-ink-2, oklch(80% 0.006 240));
+  font-family: var(--font-body, "Geist", ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--text-base, 1rem);
+  line-height: var(--leading-relaxed, 1.65);
+
+  /* Scrollbar styling (dark theme) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule, oklch(28% 0.012 240)) transparent;
+}
+
+.modal__body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal__body::-webkit-scrollbar-thumb {
+  background: var(--color-rule, oklch(28% 0.012 240));
+  border-radius: var(--radius-full, 9999px);
+}
+
+.modal__body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral, oklch(45% 0.010 240));
+}
+
+/* =============================================================================
+ * 6. MODAL FOOTER
+ * ============================================================================= */
+
+.modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm, 0.75rem);
+  padding: var(--space-md, 1rem) var(--space-lg, 1.5rem);
+  border-top: var(--rule, 1px solid var(--color-rule));
+  flex-shrink: 0;
+}
+
+.modal__footer .btn {
+  /* Buttons are defined in components/buttons.css – these are contextual overrides */
+  font-family: var(--font-body, "Geist", ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--text-sm, 0.8rem);
+  font-weight: 500;
+  padding: var(--space-xs, 0.5rem) var(--space-md, 1rem);
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast, 150ms) ease,
+    color var(--dur-fast, 150ms) ease,
+    border-color var(--dur-fast, 150ms) ease;
+}
+
+.modal__footer .btn--primary {
+  background: var(--color-accent, oklch(62% 0.18 160));
+  color: var(--color-paper, oklch(14% 0.008 240));
+  border: 1px solid var(--color-accent, oklch(62% 0.18 160));
+  font-weight: 600;
+}
+
+.modal__footer .btn--primary:hover {
+  background: var(--color-accent-dim, oklch(50% 0.14 160));
+  border-color: var(--color-accent-dim, oklch(50% 0.14 160));
+}
+
+.modal__footer .btn--secondary {
+  background: transparent;
+  color: var(--color-ink-2, oklch(80% 0.006 240));
+  border: 1px solid var(--color-rule, oklch(28% 0.012 240));
+}
+
+.modal__footer .btn--secondary:hover {
+  background: var(--color-surface, oklch(22% 0.012 240));
+  color: var(--color-ink, oklch(94% 0.006 240));
+}
+
+.modal__footer .btn--danger {
+  background: transparent;
+  color: var(--color-error, oklch(58% 0.19 30));
+  border: 1px solid var(--color-error, oklch(58% 0.19 30));
+}
+
+.modal__footer .btn--danger:hover {
+  background: var(--color-error, oklch(58% 0.19 30));
+  color: var(--color-paper, oklch(14% 0.008 240));
+}
+
+/* =============================================================================
+ * 7. SETTINGS SIDEBAR (tab navigation within settings modal)
+ * ============================================================================= */
+
+.settings-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs, 0.25rem);
+  flex-shrink: 0;
+  width: 180px;
+  padding: var(--space-md, 1rem);
+  border-right: var(--rule, 1px solid var(--color-rule));
+  background: var(--color-paper-3, oklch(20% 0.010 240));
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .settings-sidebar {
+    flex-direction: row;
+    width: 100%;
+    padding: var(--space-xs, 0.5rem);
+    border-right: none;
+    border-bottom: var(--rule, 1px solid var(--color-rule));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* =============================================================================
+ * 8. SETTINGS TAB (individual tab)
+ * ============================================================================= */
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs, 0.5rem);
+  padding: var(--space-xs, 0.5rem) var(--space-sm, 0.75rem);
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  background: transparent;
+  color: var(--color-ink-2, oklch(80% 0.006 240));
+  font-family: var(--font-body, "Geist", ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--text-sm, 0.8rem);
+  font-weight: 450;
+  line-height: var(--leading-snug, 1.3);
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background var(--dur-fast, 150ms) ease,
+    color var(--dur-fast, 150ms) ease;
+}
+
+.settings-tab:hover {
+  background: var(--color-surface, oklch(22% 0.012 240));
+  color: var(--color-ink, oklch(94% 0.006 240));
+}
+
+.settings-tab:focus-visible {
+  outline: 2px solid var(--color-focus, oklch(70% 0.19 160));
+  outline-offset: 2px;
+}
+
+.settings-tab.is-active,
+.settings-tab[aria-selected="true"] {
+  background: var(--color-accent-bg, oklch(30% 0.10 160 / 0.15));
+  color: var(--color-accent, oklch(62% 0.18 160));
+  font-weight: 500;
+}
+
+.settings-tab .tab-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.settings-tab.is-active .tab-icon {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .settings-tab {
+    padding: var(--space-xs, 0.5rem) var(--space-sm, 0.75rem);
+    font-size: var(--text-xs, 0.64rem);
+  }
+}
+
+/* =============================================================================
+ * 9. SETTINGS CONTENT (tab content panel)
+ * ============================================================================= */
+
+.settings-content {
+  flex: 1 1 auto;
+  padding: var(--space-lg, 1.5rem);
+  overflow-y: auto;
+  display: none;
+  color: var(--color-ink-2, oklch(80% 0.006 240));
+  font-family: var(--font-body, "Geist", ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--text-base, 1rem);
+  line-height: var(--leading-relaxed, 1.65);
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rule, oklch(28% 0.012 240)) transparent;
+}
+
+.settings-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.settings-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.settings-content::-webkit-scrollbar-thumb {
+  background: var(--color-rule, oklch(28% 0.012 240));
+  border-radius: var(--radius-full, 9999px);
+}
+
+.settings-content.is-active,
+.settings-content[data-active="true"] {
+  display: block;
+}
+
+.settings-content h4 {
+  margin: 0 0 var(--space-md, 1rem) 0;
+  font-family: var(--font-display);
+  font-size: var(--text-md, 1.25rem);
+  font-weight: 600;
+  color: var(--color-ink, oklch(94% 0.006 240));
+}
+
+.settings-content p {
+  margin: 0 0 var(--space-sm, 0.75rem) 0;
+}
+
+.settings-content .setting-group {
+  margin-bottom: var(--space-lg, 1.5rem);
+}
+
+.settings-content .setting-group:last-child {
+  margin-bottom: 0;
+}
+
+.settings-content label {
+  display: block;
+  margin-bottom: var(--space-2xs, 0.25rem);
+  font-size: var(--text-sm, 0.8rem);
+  font-weight: 500;
+  color: var(--color-ink, oklch(94% 0.006 240));
+}
+
+.settings-content input[type="text"],
+.settings-content select,
+.settings-content textarea {
+  width: 100%;
+  padding: var(--space-xs, 0.5rem) var(--space-sm, 0.75rem);
+  background: var(--color-surface, oklch(22% 0.012 240));
+  border: var(--rule, 1px solid var(--color-rule));
+  border-radius: var(--radius-md, 8px);
+  color: var(--color-ink, oklch(94% 0.006 240));
+  font-family: var(--font-body, "Geist", ui-sans-serif, system-ui, sans-serif);
+  font-size: var(--text-sm, 0.8rem);
+  transition: border-color var(--dur-fast, 150ms) ease;
+}
+
+.settings-content input[type="text"]:focus,
+.settings-content select:focus,
+.settings-content textarea:focus {
+  outline: none;
+  border-color: var(--color-accent, oklch(62% 0.18 160));
+  box-shadow: 0 0 0 3px var(--color-accent-bg, oklch(30% 0.10 160 / 0.15));
+}
+
+/* =============================================================================
+ * 10. SETTINGS MODAL LAYOUT (sidebar + content side by side)
+ * ============================================================================= */
+
+.modal--settings .modal__body {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .modal--settings .modal__body {
+    flex-direction: column;
+  }
+}
+
+/* =============================================================================
+ * 11. KNOWLEDGE CONTENT (lesson cards)
+ * ============================================================================= */
+
+.knowledge-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md, 1rem);
+  padding: var(--space-lg, 1.5rem);
+}
+
+.knowledge-content .knowledge-section-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-base, 1rem);
+  font-weight: 600;
+  color: var(--color-ink-2, oklch(80% 0.006 240));
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding-bottom: var(--space-xs, 0.5rem);
+  border-bottom: var(--rule, 1px solid var(--color-rule));
+}
+
+/* Lesson card */
+.knowledge-content .lesson-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs, 0.5rem);
+  padding: var(--space-md, 1rem);
+  background: var(--color-surface, oklch(22% 0.012 240));
+  border: var(--rule, 1px solid var(--color-rule));
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast, 150ms) ease,
+    border-color var(--dur-fast, 150ms) ease,
+    box-shadow var(--dur-fast, 150ms) ease;
+}
+
+.knowledge-content .lesson-card:hover {
+  background: var(--color-paper-3, oklch(20% 0.010 240));
+  border-color: var(--color-accent-dim, oklch(50% 0.14 160));
+  box-shadow: var(--shadow-glow, 0 0 20px oklch(62% 0.18 160 / 0.15));
+}
+
+.knowledge-content .lesson-card:focus-visible {
+  outline: 2px solid var(--color-focus, oklch(70% 0.19 160));
+  outline-offset: 2px;
+}
+
+.knowledge-content .lesson-card h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-md, 1.25rem);
+  font-weight: 600;
+  color: var(--color-ink, oklch(94% 0.006 240));
+  line-height: var(--leading-tight, 1.1);
+}
+
+.knowledge-content .lesson-card p {
+  margin: 0;
+  font-size: var(--text-sm, 0.8rem);
+  color: var(--color-muted, oklch(60% 0.008 240));
+  line-height: var(--leading-normal, 1.5);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.knowledge-content .lesson-card .lesson-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm, 0.75rem);
+  margin-top: var(--space-xs, 0.5rem);
+  font-size: var(--text-xs, 0.64rem);
+  color: var(--color-neutral, oklch(45% 0.010 240));
+}
+
+.knowledge-content .lesson-card .lesson-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.knowledge-content .lesson-card .lesson-difficulty {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--radius-full, 9999px);
+  font-size: var(--text-xs, 0.64rem);
+  font-weight: 500;
+}
+
+.knowledge-content .lesson-card .lesson-difficulty--beginner {
+  background: var(--color-accent-bg, oklch(30% 0.10 160 / 0.15));
+  color: var(--color-accent, oklch(62% 0.18 160));
+}
+
+.knowledge-content .lesson-card .lesson-difficulty--intermediate {
+  background: oklch(35% 0.10 85 / 0.15);
+  color: var(--color-warning, oklch(62% 0.16 85));
+}
+
+.knowledge-content .lesson-card .lesson-difficulty--advanced {
+  background: oklch(30% 0.12 30 / 0.15);
+  color: var(--color-error, oklch(58% 0.19 30));
+}
+
+.knowledge-content .lesson-card.is-active,
+.knowledge-content .lesson-card[aria-current="true"] {
+  border-color: var(--color-accent, oklch(62% 0.18 160));
+  background: var(--color-accent-bg, oklch(30% 0.10 160 / 0.15));
+}
+
+/* Lesson card compact variant (when used in lists) */
+.knowledge-content .lesson-card--compact {
+  flex-direction: row;
+  align-items: center;
+  padding: var(--space-sm, 0.75rem) var(--space-md, 1rem);
+}
+
+.knowledge-content .lesson-card--compact h4 {
+  font-size: var(--text-base, 1rem);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.knowledge-content .lesson-card--compact p {
+  display: none;
+}
+
+.knowledge-content .lesson-card--compact .lesson-meta {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+ * 12. UTILITY — scroll lock on body when modal is open
+ * ============================================================================= */
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* =============================================================================
+ * 13. REDUCED MOTION
+ * ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .modal,
+  .modal--knowledge {
+    transition: none;
+  }
+
+  .modal {
+    transform: none;
+  }
+
+  .is-open .modal,
+  [data-open="true"] .modal {
+    transform: none;
+  }
+
+  .modal--knowledge {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

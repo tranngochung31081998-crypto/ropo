@@ -1,0 +1,166 @@
+/* =============================================================================
+ * CULI Agent — Design Tokens
+ * Hallmark · macrostructure: Workbench · genre: technical · theme: midnight/specimen
+ * Pre-emit critique: P5 H4 E5 S4 R5 V5
+ * =============================================================================
+ * Two themes: MIDNIGHT (dark) + SPECIMEN (light) + system-aware via prefers-color-scheme
+ * All colors in OKLCH (perceptually uniform, hue-constant across lightness)
+ * ============================================================================= */
+
+:root {
+  /* ---- Typography (2+1 rule: display + body + outlier) ---- */
+  --font-display:  "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-body:     "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:     "Geist Mono", ui-monospace, "JetBrains Mono", monospace;
+
+  /* ---- Spacing (4pt base, semantic names) ---- */
+  --space-3xs: 0.125rem;  /*  2px */
+  --space-2xs: 0.25rem;   /*  4px */
+  --space-xs:  0.5rem;    /*  8px */
+  --space-sm:  0.75rem;   /* 12px */
+  --space-md:  1rem;      /* 16px */
+  --space-lg:  1.5rem;    /* 24px */
+  --space-xl:  2.5rem;    /* 40px */
+  --space-2xl: 4rem;      /* 64px */
+  --space-3xl: 6rem;      /* 96px */
+
+  /* ---- Type scale (major third 1.25) ---- */
+  --text-xs:   0.64rem;   /* 10.24px */
+  --text-sm:   0.8rem;    /* 12.8px  */
+  --text-base: 1rem;      /* 16px    */
+  --text-md:   1.25rem;   /* 20px    */
+  --text-lg:   1.5625rem; /* 25px    */
+  --text-xl:   1.9531rem; /* 31.25px */
+  --text-2xl:  2.4414rem;
+  --text-3xl:  3.0518rem;
+  --text-4xl:  clamp(2.5rem, 4vw + 1rem, 4rem);
+
+  /* ---- Line heights ---- */
+  --leading-tight:   1.1;
+  --leading-snug:    1.3;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  /* ---- Motion ---- */
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:      cubic-bezier(0.4, 0, 0.68, 0.06);
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:     150ms;
+  --dur-normal:   250ms;
+  --dur-slow:     400ms;
+  --dur-reveal:   600ms;
+
+  /* ---- Depth (z-index scale) ---- */
+  --z-base:     1;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-modal:    400;
+  --z-toast:    500;
+
+  /* ---- Radii ---- */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-full: 9999px;
+
+  /* ---- Rules ---- */
+  --rule: 1px solid var(--color-rule);
+
+  /* ---- Layout ---- */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 0px;
+  --topbar-height: 52px;
+  --statusbar-height: 28px;
+  --visualizer-width: 380px;
+}
+
+/* =============================================================================
+ * MIDNIGHT — Dark theme (default)
+ * Paper: deep cool midnight (L~14%, hue 240)
+ * Accent: signal green (hue 160, chroma 0.18)
+ * Neutrals: 7 steps with cool tint
+ * ============================================================================= */
+:root,
+[data-theme="midnight"] {
+  --color-paper:      oklch(14% 0.008 240);
+  --color-paper-2:    oklch(17% 0.010 240);
+  --color-paper-3:    oklch(20% 0.010 240);
+  --color-surface:    oklch(22% 0.012 240);
+  --color-rule:       oklch(28% 0.012 240);
+  --color-neutral:    oklch(45% 0.010 240);
+  --color-muted:      oklch(60% 0.008 240);
+  --color-ink-2:      oklch(80% 0.006 240);
+  --color-ink:        oklch(94% 0.006 240);
+  --color-accent:     oklch(62% 0.18 160);
+  --color-accent-dim: oklch(50% 0.14 160);
+  --color-accent-bg:  oklch(30% 0.10 160 / 0.15);
+  --color-focus:      oklch(70% 0.19 160);
+  --color-error:      oklch(58% 0.19 30);
+  --color-success:    oklch(58% 0.16 150);
+  --color-warning:    oklch(62% 0.16 85);
+
+  /* Shadows: dark mode → use light shadows (higher lightness than paper) */
+  --shadow-sm:  0 1px 2px oklch(0% 0 0 / 0.3);
+  --shadow-md:  0 4px 12px oklch(0% 0 0 / 0.4);
+  --shadow-lg:  0 8px 24px oklch(0% 0 0 / 0.5);
+  --shadow-glow: 0 0 20px oklch(62% 0.18 160 / 0.15);
+}
+
+/* =============================================================================
+ * SPECIMEN — Light theme
+ * Paper: warm cream (L~96%, hue 80)
+ * Accent: same green, lower chroma
+ * ============================================================================= */
+  [data-theme="specimen"] {
+   --color-paper:      oklch(96% 0.012 80);
+   --color-paper-2:    oklch(93% 0.014 80);
+   --color-paper-3:    oklch(90% 0.012 80);
+   --color-surface:    oklch(88% 0.010 80);
+   --color-rule:       oklch(82% 0.010 80);
+   --color-neutral:    oklch(57% 0.008 80);
+   --color-muted:      oklch(47% 0.008 70);
+   --color-ink-2:      oklch(43% 0.008 60);
+   --color-ink:        oklch(31% 0.008 60);
+  --color-accent:     oklch(50% 0.18 160);
+  --color-accent-dim: oklch(42% 0.14 160);
+  --color-accent-bg:  oklch(70% 0.10 160 / 0.12);
+  --color-focus:      oklch(55% 0.19 160);
+  --color-error:      oklch(48% 0.19 30);
+  --color-success:    oklch(48% 0.16 150);
+  --color-warning:    oklch(52% 0.16 85);
+
+  --shadow-sm:  0 1px 2px oklch(0% 0 0 / 0.06);
+  --shadow-md:  0 4px 12px oklch(0% 0 0 / 0.08);
+  --shadow-lg:  0 8px 24px oklch(0% 0 0 / 0.10);
+  --shadow-glow: 0 0 20px oklch(50% 0.18 160 / 0.10);
+}
+
+/* =============================================================================
+ * System-aware: respects prefers-color-scheme
+ * ============================================================================= */
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] {
+    --color-paper:      oklch(96% 0.012 80);
+    --color-paper-2:    oklch(93% 0.014 80);
+    --color-paper-3:    oklch(90% 0.012 80);
+    --color-surface:    oklch(88% 0.010 80);
+    --color-rule:       oklch(82% 0.010 80);
+    --color-neutral:    oklch(56% 0.008 80);
+    --color-muted:      oklch(40% 0.008 70);
+      --color-ink-2:      oklch(38% 0.008 60);
+      --color-ink:        oklch(26% 0.008 60);
+    --color-accent:     oklch(50% 0.18 160);
+    --color-accent-dim: oklch(42% 0.14 160);
+    --color-accent-bg:  oklch(70% 0.10 160 / 0.12);
+    --color-focus:      oklch(55% 0.19 160);
+    --color-error:      oklch(48% 0.19 30);
+    --color-success:    oklch(48% 0.16 150);
+    --color-warning:    oklch(52% 0.16 85);
+    --shadow-sm:  0 1px 2px oklch(0% 0 0 / 0.06);
+    --shadow-md:  0 4px 12px oklch(0% 0 0 / 0.08);
+    --shadow-lg:  0 8px 24px oklch(0% 0 0 / 0.10);
+    --shadow-glow: 0 0 20px oklch(50% 0.18 160 / 0.10);
+  }
+}
