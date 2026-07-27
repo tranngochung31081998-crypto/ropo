@@ -1,0 +1,45 @@
+{
+  "name": "culi-desktop",
+  "version": "0.1.0",
+  "description": "CULI Agent Desktop",
+  "main": "main.js",
+  "scripts": {
+    "start":       "electron .",
+    "build":       "electron-builder --win",
+    "build:dir":   "electron-builder --win --dir"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron":         "^31.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId":       "com.culi.agent",
+    "productName": "CULI Agent",
+    "win": {
+      "icon": "../icons/icon.ico",
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false
+    },
+    "files": [
+      "main.js",
+      "preload.js"
+    ],
+    "extraResources": [
+      {
+        "from": "../target/release/culi.exe",
+        "to":   "backend/culi.exe"
+      },
+      {
+        "from": "../frontend/dist",
+        "to":   "frontend"
+      }
+    ],
+    "directories": {
+      "output": "../dist-electron"
+    }
+  }
+}
